@@ -1,26 +1,54 @@
-﻿*.wav
+﻿# Fichiers audio (hébergés sur Hugging Face)
+*.wav
 *.mp3
 *.m4a
+audio/
+wavs/
+dataset_training/wavs/
+
+# Modèles et checkpoints (trop volumineux pour GitHub)
 *.pth
 *.t7
 *.pt
 *.bin
+*.ckpt
+checkpoints/
+
+# Archives
 *.zip
 *.tar.gz
+
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Environnements virtuels
 venv/
 .venv/
+env/
+ENV/
+
+# Jupyter
 .ipynb_checkpoints/
+
+# Logs et TensorBoard
 *.log
 tensorboard/
 events.out.*
-audio/
-wavs/
-dataset_training/wavs/
-dataset_training/voice-cloning-arabic/StyleTTS2/Models/
-dataset_training/voice-cloning-arabic/StyleTTS2/Utils/
-dataset_training/voice-cloning-arabic/StyleTTS2/StyleTTS2-LibriTTS-temp/
+logs/
+
+# Dépôts clonés et modèles volumineux
+dataset_training/voice-cloning-arabic/StyleTTS2/
 dataset_training/voice-cloning-arabic/venv/
-dataset_training/voice-cloning-arabic/StyleTTS2/
-dataset_training/voice-cloning-arabic/StyleTTS2/
-dataset_training/voice-cloning-arabic/StyleTTS2/
+
+# Token Hugging Face (IMPORTANT: ne jamais commit)
+.env
+hf_token.txt
+
+# OS
+.DS_Store
+Thumbs.db
