@@ -104,7 +104,6 @@ def main(config_path):
                                         OOD_data=OOD_data,
                                         min_length=min_length,
                                         batch_size=batch_size,
-                                        batch_size=batch_size,
                                         num_workers=num_workers,
                                         dataset_config={},
                                         device=device)
@@ -113,8 +112,6 @@ def main(config_path):
                                       root_path,
                                       OOD_data=OOD_data,
                                       min_length=min_length,
-                                      batch_size=batch_size,
-                                      validation=True,
                                       batch_size=batch_size,
                                       validation=True,
                                       num_workers=num_workers,

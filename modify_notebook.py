@@ -1,99 +1,97 @@
 import json
-import os
 
-notebook_path = r"c:\Users\Racim\Desktop\arable tts - Copie\COLAB_NOTEBOOK_FINAL.ipynb"
+def modify_notebook(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        notebook = json.load(f)
 
-with open(notebook_path, 'r', encoding='utf-8') as f:
-    nb = json.load(f)
+    # 1. Modify Configuration Cell (Cell 5 - Index 2 or 3 depending on markdown cells)
+    # We look for the cell containing GITHUB_REPO
+    
+    config_cell_found = False
+    for cell in notebook['cells']:
+        if cell['cell_type'] == 'code':
+            source = "".join(cell['source'])
+            if "GITHUB_REPO =" in source and "HF_DATASET_REPO =" in source:
+                print("Found Config Cell. Modifying...")
+                new_source = [
+                    "# \ud83d\udd27 CONFIGURATION - Modifiez ces valeurs\n",
+                    "GITHUB_REPO = \"Racim679/tts\"  # Votre repo GitHub\n",
+                    "\n",
+                    "print(f\"\u2705 GitHub: {GITHUB_REPO}\")"
+                ]
+                cell['source'] = new_source
+                config_cell_found = True
+                break
+    
+    if not config_cell_found:
+        print("Warning: Config cell not found!")
 
-# New content for the data download cell
-new_download_source = [
-    "import os\n",
-    "from huggingface_hub import snapshot_download\n",
-    "from google.colab import drive\n",
-    "\n",
-    "# Monter Google Drive si nécessaire\n",
-    "if not os.path.exists('/content/drive'):\n",
-    "    drive.mount('/content/drive')\n",
-    "\n",
-    "# Cloner StyleTTS2\n",
-    "if not os.path.exists(\"/content/StyleTTS2\"):\n",
-    "    !git clone https://github.com/yl4579/StyleTTS2.git /content/StyleTTS2\n",
-    "    print(\"✅ StyleTTS2 cloné!\")\n",
-    "else:\n",
-    "    print(\"ℹ️ StyleTTS2 déjà présent\")\n",
-    "\n",
-    "# Cloner votre repo avec les configs\n",
-    "if not os.path.exists(\"/content/arable-tts\"):\n",
-    "    !git clone https://github.com/{GITHUB_REPO}.git /content/arable-tts\n",
-    "    print(\"✅ Configs clonées depuis GitHub!\")\n",
-    "else:\n",
-    "    print(\"ℹ️ Repo déjà présent\")\n",
-    "\n",
-    "# 📥 LOGIQUE DE TÉLÉCHARGEMENT DES DONNÉES\n",
-    "# 1. Vérifier si le ZIP existe sur Drive\n",
-    "drive_zip_path = \"/content/drive/MyDrive/darija_dataset.zip\"\n",
-    "local_dataset_path = \"/content/dataset_darija\"\n",
-    "\n",
-    "if os.path.exists(drive_zip_path):\n",
-    "    print(f\"📦 ZIP trouvé sur Drive: {drive_zip_path}\")\n",
-    "    print(\"⏳ Extraction en cours... (ça peut prendre 1-2 min)\")\n",
-    "    !unzip -q {drive_zip_path} -d {local_dataset_path}\n",
-    "    print(\"✅ Données extraites depuis Drive!\")\n",
-    "else:\n",
-    "    print(\"⚠️ ZIP non trouvé sur Drive, tentative HuggingFace...\")\n",
-    "    # Télécharger les audio depuis HuggingFace\n",
-    "    print(f\"📥 Téléchargement audio depuis HuggingFace: {HF_DATASET_REPO}...\")\n",
-    "    try:\n",
-    "        snapshot_download(\n",
-    "            repo_id=HF_DATASET_REPO,\n",
-    "            repo_type=\"dataset\",\n",
-    "            local_dir=local_dataset_path,\n",
-    "            local_dir_use_symlinks=False,\n",
-    "            token=HF_TOKEN if HF_TOKEN else None\n",
-    "        )\n",
-    "        print(\"✅ Dataset audio téléchargé depuis HuggingFace!\")\n",
-    "    except Exception as e:\n",
-    "        print(f\"❌ Erreur HuggingFace: {e}\")\n",
-    "        print(\"💡 CONSEIL: Uploadez 'darija_dataset.zip' sur votre Google Drive pour éviter ça.\")\n",
-    "\n",
-    "# Vérifier ce qui a été téléchargé\n",
-    "if os.path.exists(f\"{local_dataset_path}/wavs\"):\n",
-    "    wav_count = len([f for f in os.listdir(f\"{local_dataset_path}/wavs\") if f.endswith('.wav')])\n",
-    "    print(f\"🎵 {wav_count} fichiers audio détectés\")\n",
-    "\n",
-    "metadata_files = [\"metadata_train.csv\", \"metadata_eval.csv\", \"metadata.json\"]\n",
-    "for mf in metadata_files:\n",
-    "    if os.path.exists(f\"{local_dataset_path}/{mf}\"):\n",
-    "        print(f\"📄 {mf} présent\")"
-]
+    # 2. Modify Download Cell (Cell 9)
+    # Looking for snapshot_download
+    
+    download_cell_found = False
+    for cell in notebook['cells']:
+        if cell['cell_type'] == 'code':
+            source = "".join(cell['source'])
+            if "snapshot_download" in source and "drive.mount" in source:
+                print("Found Download Cell. Modifying...")
+                new_source = [
+                    "import os\n",
+                    "from google.colab import drive\n",
+                    "\n",
+                    "# Monter Google Drive si n\u00e9cessaire\n",
+                    "if not os.path.exists('/content/drive'):\n",
+                    "    drive.mount('/content/drive')\n",
+                    "\n",
+                    "# Cloner StyleTTS2\n",
+                    "if not os.path.exists(\"/content/StyleTTS2\"):\n",
+                    "    !git clone https://github.com/yl4579/StyleTTS2.git /content/StyleTTS2\n",
+                    "    print(\"\u2705 StyleTTS2 clon\u00e9!\")\n",
+                    "else:\n",
+                    "    print(\"\u2139\ufe0f StyleTTS2 d\u00e9j\u00e0 pr\u00e9sent\")\n",
+                    "\n",
+                    "# Cloner votre repo avec les configs\n",
+                    "if not os.path.exists(\"/content/arable-tts\"):\n",
+                    "    !git clone https://github.com/{GITHUB_REPO}.git /content/arable-tts\n",
+                    "    print(\"\u2705 Configs clon\u00e9es depuis GitHub!\")\n",
+                    "else:\n",
+                    "    print(\"\u2139\ufe0f Repo d\u00e9j\u00e0 pr\u00e9sent\")\n",
+                    "\n",
+                    "# \ud83d\udce5 LOGIQUE DE T\u00c9L\u00c9CHARGEMENT DES DONN\u00c9ES\n",
+                    "# 1. V\u00e9rifier si le ZIP existe sur Drive\n",
+                    "drive_zip_path = \"/content/drive/MyDrive/darija_dataset.zip\"\n",
+                    "local_dataset_path = \"/content/dataset_darija\"\n",
+                    "\n",
+                    "if os.path.exists(drive_zip_path):\n",
+                    "    print(f\"\ud83d\udce6 ZIP trouv\u00e9 sur Drive: {drive_zip_path}\")\n",
+                    "    print(\"\u23f3 Extraction en cours... (\u00e7a peut prendre 1-2 min)\")\n",
+                    "    !unzip -q {drive_zip_path} -d {local_dataset_path}\n",
+                    "    print(\"\u2705 Donn\u00e9es extraites depuis Drive!\")\n",
+                    "else:\n",
+                    "    print(\"\u274c ZIP non trouv\u00e9 sur Drive! (darija_dataset.zip)\")\n",
+                    "    print(\"\u26a0\ufe0f Veuillez uploader le fichier zip \u00e0 la racine de votre Drive.\")\n",
+                    "\n",
+                    "# V\u00e9rifier ce qui a \u00e9t\u00e9 t\u00e9l\u00e9charg\u00e9\n",
+                    "if os.path.exists(f\"{local_dataset_path}/wavs\"):\n",
+                    "    wav_count = len([f for f in os.listdir(f\"{local_dataset_path}/wavs\") if f.endswith('.wav')])\n",
+                    "    print(f\"\ud83c\udfb5 {wav_count} fichiers audio d\u00e9tect\u00e9s\")\n",
+                    "\n",
+                    "metadata_files = [\"metadata_train.csv\", \"metadata_eval.csv\", \"metadata.json\"]\n",
+                    "for mf in metadata_files:\n",
+                    "    if os.path.exists(f\"{local_dataset_path}/{mf}\"):\n",
+                    "        print(f\"\ud83d\udcc4 {mf} pr\u00e9sent\")"
+                ]
+                cell['source'] = new_source
+                download_cell_found = True
+                break
 
-# Modify cells
-modified_download = False
-modified_copy = False
+    if not download_cell_found:
+        print("Warning: Download cell not found!")
 
-for cell in nb['cells']:
-    if cell['cell_type'] == 'code':
-        source_str = "".join(cell['source'])
-        
-        # Modify download cell
-        if "snapshot_download" in source_str and "Cloner StyleTTS2" in source_str:
-            cell['source'] = new_download_source
-            modified_download = True
-            print("✅ Modified download cell")
-            
-        # Modify copy cell
-        if "train_finetune_optimized.py" in source_str:
-            new_source = []
-            for line in cell['source']:
-                new_source.append(line.replace("train_finetune_optimized.py", "train_finetune.py"))
-            cell['source'] = new_source
-            modified_copy = True
-            print("✅ Modified copy cell")
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(notebook, f, indent=1)
+    
+    print("Notebook modified successfully.")
 
-if modified_download and modified_copy:
-    with open(notebook_path, 'w', encoding='utf-8') as f:
-        json.dump(nb, f, indent=1)
-    print("🎉 Notebook successfully updated!")
-else:
-    print(f"⚠️ Warning: Download modified: {modified_download}, Copy modified: {modified_copy}")
+if __name__ == "__main__":
+    modify_notebook("COLAB_NOTEBOOK_FINAL.ipynb")
