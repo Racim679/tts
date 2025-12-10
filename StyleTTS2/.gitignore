@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Modèles pré-entraînés (trop gros pour GitHub)
+Models/**/*.pth
+Models/**/*.pt
+Models/**/*.ckpt
+
+# Fichiers audio (trop nombreux, à héberger sur HuggingFace)
+wavs/*.wav
+Data/*.wav
+
+# Logs et checkpoints d'entraînement
+*.log
+runs/
+outputs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Fichiers de config locaux (peuvent contenir des paths spécifiques)
+# EXCEPTION: On garde les configs mais on enlève les paths locaux
