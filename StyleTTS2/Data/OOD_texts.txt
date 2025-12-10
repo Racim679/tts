@@ -1,0 +1,10 @@
+This is a dummy out of distribution text.
+The quick brown fox jumps over the lazy dog, testing various phonemes in the English language.
+Machine learning models require diverse training data to generalize effectively across different scenarios and contexts.
+StyleTTS2 enables high-quality text-to-speech synthesis through advanced neural architecture and training techniques.
+Out-of-distribution examples help models learn robustness and handle unexpected inputs during inference time.
+Natural language processing has revolutionized human-computer interaction through sophisticated deep learning approaches.
+Speech synthesis technology continues advancing rapidly with transformer-based models and attention mechanisms.
+Phonetic diversity in training data significantly impacts model performance on unseen speakers and accents.
+The architecture of modern TTS systems incorporates multiple components for prosody, duration, and acoustic modeling.
+Fine-tuning pre-trained models enables efficient adaptation to new voices and languages with limited data.
